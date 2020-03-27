@@ -1,4 +1,4 @@
-import { getNextGeneration, BoardState } from './game'
+import {getNextGeneration, BoardState, getIndexFromCoords} from './game'
 
 const renderBoard = (cols: number, rows: number) => (board: BoardState) : string => {
     const arr = board.join('')
@@ -114,6 +114,60 @@ describe('getNextGeneration', () => {
             renderBoard(5,5)(getNextGeneration(before, 5, 5))
         ).toEqual(
             renderBoard(5,5)(after)
+        )
+    })
+
+    it('fff', () => {
+        const before: BoardState = [
+            0,0,0,1,0,0,0,0,
+            0,1,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,1,0,0,0,
+            0,0,0,0,0,0,0,0,
+        ]
+
+        const after: BoardState = [
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+            0,0,0,0,0,0,0,0,
+        ]
+
+        expect(
+            renderBoard(8,7)(getNextGeneration(before, 7, 8))
+        ).toEqual(
+            renderBoard(8,7)(after)
+        )
+    })
+})
+
+describe('getIndexFromCoords', () => {
+    it('should get the first', () => {
+        expect(
+            getIndexFromCoords({ row: 0, col: 0}, 10, 20)
+        ).toEqual(
+            0
+        )
+    })
+
+    it('should get the last', () => {
+        expect(
+            getIndexFromCoords({ row: 1, col: 1}, 2, 2)
+        ).toEqual(
+            3
+        )
+    })
+
+    it('should', () => {
+        expect(
+            getIndexFromCoords({ row: 6, col: 2 }, 7, 8)
+        ).toEqual(
+            50
         )
     })
 })

@@ -30,8 +30,8 @@ const getCoordsFor = (index: number, rows: number, cols: number): Coords => {
     }
 }
 
-const getIndexFromCoords = (coords: Coords, rows: number, cols: number): number => {
-    return (coords.row * rows) + coords.col
+export const getIndexFromCoords = ({ row, col }: Coords, rows: number, cols: number): number => {
+    return (row * cols) + col
 }
 
 const getValueAtIndex = (board: BoardState, index: number): CellValue => {
@@ -53,17 +53,24 @@ const getValueAtCoord = (board: BoardState, coords: Coords, rows: number, cols: 
         row = 0
     }
 
-    return getValueAtIndex(board, getIndexFromCoords({row, col}, rows, cols))
+    const index = getIndexFromCoords({row, col}, rows, cols)
+
+    return getValueAtIndex(board, index)
 }
 
 const getNeighborsFor = (board: BoardState, index: number, rows: number, cols: number): Neighbors => {
     const {col, row} = getCoordsFor(index, rows, cols)
+    const northCoords = {row: row - 1, col};
+    const north = getValueAtCoord(board, northCoords, rows, cols);
+    const eastCoords = {row, col: col + 1};
+    const east = getValueAtCoord(board, eastCoords, rows, cols);
+    const southCoords = {row: row + 1, col};
+    const south = getValueAtCoord(board, southCoords, rows, cols);
+    const westCoords = {row, col: col - 1};
+    const west = getValueAtCoord(board, westCoords, rows, cols);
 
     return {
-        north: getValueAtCoord(board, {row: row - 1, col}, rows, cols),
-        east: getValueAtCoord(board, {row, col: col + 1}, rows, cols),
-        south: getValueAtCoord(board, {row: row + 1, col}, rows, cols),
-        west: getValueAtCoord(board, {row, col: col - 1}, rows, cols),
+        north, east, south, west
     }
 }
 
