@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {ALIVE, BoardState, DEAD} from "../../util/game";
+import {ALIVE, BoardState, DEAD, getCoordsFor} from "../../util/game";
 import Cell from "../Cell";
 import {Root} from "./styled";
 
@@ -24,9 +24,13 @@ const Board = ({ boardState, rows, cols, onBoardStateChanged}: Props) => {
     }
     return (
         <Root rows={rows} cols={cols}>
-            {boardState.map((value, index) => (
-                <Cell value={value} key={index} onClick={handleCellClicked.bind(null, index)} />
-            ))}
+            {boardState.map((value, index) => {
+                const rowOffset = getCoordsFor(index, rows, cols).row / rows;
+
+                return (
+                    <Cell value={value} key={index} rowOffset={rowOffset} onClick={handleCellClicked.bind(null, index)} />
+                )
+            })}
         </Root>
     )
 }

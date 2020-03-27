@@ -6,11 +6,12 @@ import {Root} from './styled'
 interface Props {
     value: CellValue
     onClick: (e: React.MouseEvent) => void
+    rowOffset: number;
 }
 
-const Cell = ({value, onClick}: Props) => {
+const Cell = ({value, onClick, rowOffset}: Props) => {
     return (
-        <Root onClick={onClick} value={value}>
+        <Root onClick={onClick} value={value} rowOffset={rowOffset}>
             {value}
         </Root>
     )

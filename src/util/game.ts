@@ -20,10 +20,7 @@ interface Coords {
     col: number
 }
 
-// const rows = 3
-// const cols = 3
-
-const getCoordsFor = (index: number, rows: number, cols: number): Coords => {
+export const getCoordsFor = (index: number, rows: number, cols: number): Coords => {
     return {
         col: index % cols,
         row: Math.floor(index / cols)
