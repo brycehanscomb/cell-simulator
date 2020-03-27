@@ -1,7 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import './App.css';
-import Board from "./components/Board";
-import {ALIVE, BoardState, CellValue, DEAD, getNextGeneration} from "./util/game";
+import Board from "../Board";
+import {ALIVE, BoardState, CellValue, DEAD, getNextGeneration} from "../../util/game";
+
+import {Root} from './styled'
+import Stage from "../Stage";
+import Toolbar from "../Toolbar";
 
 export interface GameState {
     boardState: BoardState;
@@ -14,12 +17,12 @@ const parseMap = {
     '1': ALIVE
 };
 
-const hashState = (boardState: BoardState, rows: number, cols: number) : string => {
+const hashState = (boardState: BoardState, rows: number, cols: number): string => {
     return `${boardState.join('')}@${cols}x${rows}`
 }
 
-const readStateFromUrl = () : GameState => {
-    const { searchParams } = new URL(window.location.href)
+const readStateFromUrl = (): GameState => {
+    const {searchParams} = new URL(window.location.href)
 
     let boardState: BoardState;
     let rows: number;
@@ -39,7 +42,7 @@ const readStateFromUrl = () : GameState => {
 
     if (searchParams.has('boardState')) {
         // todo: validate values in here and also check for board size params
-        boardState = searchParams.get('boardState')!.split('').map((value) => parseMap[value as '0'|'1'] as CellValue)
+        boardState = searchParams.get('boardState')!.split('').map((value) => parseMap[value as '0' | '1'] as CellValue)
     } else {
         boardState = Array(rows * cols).fill(DEAD)
     }
@@ -63,7 +66,8 @@ let initialState: BoardState = [
 
 initialState = readStateFromUrl().boardState
 
-const noop = () => {}
+const noop = () => {
+}
 
 const saveState = (boardState: BoardState, rows: number, cols: number) => {
     const url = new URL(window.location.href)
@@ -71,7 +75,7 @@ const saveState = (boardState: BoardState, rows: number, cols: number) => {
     url.searchParams.set('rows', rows.toString());
     url.searchParams.set('cols', cols.toString());
 
-    window.history.pushState({ boardState, rows, cols}, '', url.toString())
+    window.history.pushState({boardState, rows, cols}, '', url.toString())
 }
 
 const initialGameState = readStateFromUrl()
@@ -96,7 +100,7 @@ function App() {
     }, [boardState, rows, cols])
 
     useEffect(() => {
-        const handleHistoryChange = ({ state }: any) => {
+        const handleHistoryChange = ({state}: any) => {
             if (state) {
                 setBoardState(state.boardState);
             }
@@ -108,17 +112,12 @@ function App() {
     }, [setBoardState]);
 
     return (
-        <div className="App">
-            <button onClick={step}>Next generation</button>
-            <Board boardState={boardState} cols={cols} rows={rows} onBoardStateChanged={setBoardState}/>
-            <Board boardState={getNextGeneration(boardState, rows, cols)} cols={cols} rows={rows}
-                   onBoardStateChanged={noop}/>
-            <Board boardState={getNextGeneration(getNextGeneration(boardState, rows, cols), rows, cols)} cols={cols}
-                   rows={rows} onBoardStateChanged={noop}/>
-            <Board
-                boardState={getNextGeneration(getNextGeneration(getNextGeneration(boardState, rows, cols), rows, cols), rows, cols)}
-                cols={cols} rows={rows} onBoardStateChanged={noop}/>
-        </div>
+        <Root>
+            <Stage>
+                <Board boardState={boardState} cols={cols} rows={rows} onBoardStateChanged={setBoardState}/>
+            </Stage>
+            <Toolbar onStep={step}/>
+        </Root>
     );
 }
 

@@ -37,6 +37,7 @@ export const Root = styled.button<{ value: CellValue, rowOffset: number }>`
   -webkit-appearance: none;
   -moz-appearance: none;
   border: none;
+  margin: 0;
   
   background: ${props => {
     const baseColor = props.value === ALIVE ? colors[ALIVE] : colors[DEAD];
