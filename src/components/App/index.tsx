@@ -10,7 +10,7 @@ import {
 
 import { Root } from "./styled";
 import Stage from "../Stage";
-import Toolbar from "../Toolbar";
+import Toolbar, { MIN_COLS, MIN_ROWS } from "../Toolbar";
 import { cropBoard, padBoard } from "../../util/board";
 
 export interface GameState {
@@ -32,6 +32,23 @@ const hashState = (
   return `${boardState.join("")}@${cols}x${rows}`;
 };
 
+// prettier-ignore
+const sampleBoard = [
+  0, 0, 0, 0, 0, 0, 0, 0,
+  0, 1, 0, 0, 0, 0, 1, 0,
+  0, 1, 1, 1, 1, 1, 1, 0,
+  1, 1, 0, 1, 1, 0, 1, 1,
+  0, 1, 1, 0, 0, 1, 1, 0,
+  0, 0, 0, 1, 1, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0
+];
+
+const sampleState: GameState = {
+  boardState: sampleBoard,
+  rows: 7,
+  cols: 8
+};
+
 const readStateFromUrl = (): GameState => {
   const { searchParams } = new URL(window.location.href);
 
@@ -40,15 +57,15 @@ const readStateFromUrl = (): GameState => {
   let cols: number;
 
   if (searchParams.has("cols")) {
-    cols = parseInt(searchParams.get("cols")!, 10);
+    cols = Math.max(parseInt(searchParams.get("cols")!, 10), MIN_COLS);
   } else {
-    cols = 8;
+    cols = sampleState.cols;
   }
 
   if (searchParams.has("rows")) {
-    rows = parseInt(searchParams.get("rows")!, 10);
+    rows = Math.max(parseInt(searchParams.get("rows")!, 10), MIN_ROWS);
   } else {
-    rows = 8;
+    rows = sampleState.rows;
   }
 
   if (searchParams.has("boardState")) {
@@ -57,17 +74,15 @@ const readStateFromUrl = (): GameState => {
       .get("boardState")!
       .split("")
       .map(value => parseMap[value as "0" | "1"] as CellValue);
+
+    /**
+     * World's dumbest validation:
+     */
+    if (boardState.length !== rows * cols) {
+      boardState = sampleState.boardState;
+    }
   } else {
-    // prettier-ignore
-    boardState = [
-      0, 0, 0, 0, 0, 0, 0, 0,
-      0, 1, 0, 0, 0, 0, 1, 0,
-      0, 1, 1, 1, 1, 1, 1, 0,
-      1, 1, 0, 1, 1, 0, 1, 1,
-      0, 1, 1, 0, 0, 1, 1, 0,
-      0, 0, 0, 1, 1, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0
-    ];
+    boardState = sampleState.boardState;
   }
 
   return {
