@@ -1,8 +1,9 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 export const Root = styled.div`
-    background: #B0BEC5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background: #b0bec5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
 `;

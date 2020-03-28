@@ -2,7 +2,10 @@ import styled from "styled-components";
 import { ALIVE, CellValue, DEAD } from "../../util/game";
 import { shadeColor } from "../../util/color";
 
-const colors = {
+/**
+ * @todo: move this
+ */
+export const colors = {
   [ALIVE]: "#FF9800",
   [DEAD]: "#607D8B",
   pressed: "#37474F"
