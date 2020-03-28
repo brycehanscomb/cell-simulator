@@ -10,10 +10,13 @@ import {
 } from "./styled";
 import { useEffect, useState } from "react";
 import { SideBySide } from "../Toolbar/styled";
-import ImagePreview from "../ImagePreview"; // todo: move this somewhere more common
+import ImagePreview from "../ImagePreview";
+import { GameState } from "../App";
+import Button from "../Button"; // todo: move this somewhere more common
 
 interface Props {
   onCancel: () => void;
+  onSubmit: (newState: GameState) => void;
 }
 
 export const loadImage = (
@@ -63,7 +66,7 @@ const ImageImporter = (props: Props) => {
         setErr(e || new Error(`Could not load "${targetUrl}"`));
       });
     }
-  }, [targetUrl, setErr, err]);
+  }, [targetUrl, setErr, err, allowCrossOriginImageLoading]);
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { target } = e;
@@ -87,6 +90,8 @@ const ImageImporter = (props: Props) => {
       }
     }
   };
+
+  const [importedGameState, setImportedGameState] = useState();
 
   return (
     <Root>
@@ -131,9 +136,16 @@ const ImageImporter = (props: Props) => {
             <ImagePreview
               src={targetUrl}
               allowCrossOriginImageLoading={allowCrossOriginImageLoading}
+              onSubmit={setImportedGameState}
             />
           </SideBySide>
         )}
+        <Button
+          onClick={() => props.onSubmit(importedGameState)}
+          style={{ position: "relative", zIndex: 9 }}
+        >
+          Import Now
+        </Button>
       </Content>
     </Root>
   );

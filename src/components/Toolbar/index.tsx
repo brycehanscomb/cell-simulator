@@ -3,6 +3,7 @@ import { Root, SideBySide, ThreeUp, Splitter, Text } from "./styled";
 import Button from "../Button";
 import { useEffect, useState } from "react";
 import ImageImporter from "../ImageImporter";
+import { GameState } from "../App";
 
 export const MIN_ROWS = 4;
 export const MIN_COLS = 4;
@@ -15,6 +16,7 @@ interface Props {
   onClearBoard: () => void;
   onResetBoard: () => void;
   onRandomiseBoard: () => void;
+  onSetGameState: (newState: GameState) => void;
   rows: number;
   cols: number;
 }
@@ -101,7 +103,13 @@ const Toolbar = ({ onStep, ...props }: Props) => {
         <small>(You can also click the cells to change them!)</small>
       </Text>
       {isImageImporterShowing && (
-        <ImageImporter onCancel={() => setIsImageImporterShowing(false)} />
+        <ImageImporter
+          onCancel={() => setIsImageImporterShowing(false)}
+          onSubmit={s => {
+            setIsImageImporterShowing(false);
+            props.onSetGameState(s);
+          }}
+        />
       )}
     </Root>
   );

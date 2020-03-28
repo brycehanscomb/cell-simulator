@@ -3,13 +3,19 @@ import { useEffect, useRef, useState } from "react";
 import { loadImage } from "../ImageImporter";
 import { chunk } from "lodash";
 import { ALIVE, DEAD } from "../../util/game";
+import { GameState } from "../App";
 
 interface Props {
   src: string;
   allowCrossOriginImageLoading: boolean;
+  onSubmit: (newState: GameState) => void;
 }
 
-const ImagePreview = ({ src, allowCrossOriginImageLoading }: Props) => {
+const ImagePreview = ({
+  src,
+  allowCrossOriginImageLoading,
+  onSubmit
+}: Props) => {
   const rootNode = useRef<HTMLCanvasElement>();
   const visibleNode = useRef<HTMLCanvasElement>();
 
@@ -18,6 +24,8 @@ const ImagePreview = ({ src, allowCrossOriginImageLoading }: Props) => {
     width: number;
     height: number;
   }>();
+
+  const [ditheredData, setDitheredData] = useState<any>();
 
   useEffect(() => {
     /**
@@ -40,7 +48,6 @@ const ImagePreview = ({ src, allowCrossOriginImageLoading }: Props) => {
   }, [src, allowCrossOriginImageLoading]);
 
   useEffect(() => {
-    console.log(imageData);
     if (imageData && visibleNode.current) {
       let pixelChunks = chunk<number>(imageData.data, 4).map(([r, g, b, a]) => {
         if (a < 128) {
@@ -54,9 +61,11 @@ const ImagePreview = ({ src, allowCrossOriginImageLoading }: Props) => {
         }
       });
 
-      visibleNode.current.width = imageData.width;
-      visibleNode.current.height = imageData.height;
-      const ctx = visibleNode.current.getContext("2d")!;
+      const canvas = visibleNode.current;
+
+      canvas.width = imageData.width;
+      canvas.height = imageData.height;
+      const ctx = canvas.getContext("2d")!;
 
       const ditheredPixelChunks = pixelChunks.map(chunk => {
         if (chunk === ALIVE) {
@@ -82,8 +91,33 @@ const ImagePreview = ({ src, allowCrossOriginImageLoading }: Props) => {
       }
 
       ctx.putImageData(newImage, 0, 0);
+
+      /**
+       * @see https://stackoverflow.com/a/24468840
+       */
+      // create an image from the canvas
+      // clear & scale the canvas
+      // draw the image to the canvas
+      var imageObject = new Image();
+      imageObject.onload = function() {
+        const scale = 30 / canvas.width; // resize to 30px wide (todo: constrain to the biggest size / side)
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.scale(scale, scale);
+        ctx.drawImage(imageObject, 0, 0);
+        const scaledData = ctx.getImageData(0, 0, 30, 30);
+        const scaledCellValues = chunk<number>(scaledData.data, 4).map(i =>
+          i[0] === 255 ? ALIVE : DEAD
+        );
+
+        onSubmit({
+          boardState: scaledCellValues,
+          rows: 30,
+          cols: 30
+        });
+      };
+      imageObject.src = canvas.toDataURL();
     }
-  }, [imageData]);
+  }, [imageData, onSubmit]);
 
   return (
     <>

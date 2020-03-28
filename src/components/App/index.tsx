@@ -57,6 +57,12 @@ function App() {
     setCols(newCols);
   };
 
+  const setGameState = (gameState: GameState) => {
+    setBoardState(gameState.boardState);
+    setRows(gameState.rows);
+    setCols(gameState.cols);
+  };
+
   const clearBoard = () => {
     setBoardState(repeat(DEAD, boardState.length));
   };
@@ -109,6 +115,7 @@ function App() {
         onClearBoard={clearBoard}
         onResetBoard={resetBoard}
         onRandomiseBoard={randomiseBoard}
+        onSetGameState={setGameState}
         rows={rows}
         cols={cols}
       />
