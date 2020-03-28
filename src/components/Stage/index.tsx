@@ -2,6 +2,7 @@ import * as React from "react";
 import { Root, SizeMonitor } from "./styled";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CELL_GAP, CELL_SIDE_LENGTH } from "../Board/styled";
+import { debounce } from "lodash";
 
 interface Props {
   rows: number;
@@ -39,10 +40,22 @@ const Stage = (props: Props) => {
   }, [rootNode, props.cols, props.rows, setScaleSize]);
 
   /**
-   * Zoom out on the board if it gets too big for the viewport
-   * @todo: add horizontal oversizing handling as well
+   * Zoom out on the board if it gets too big for the viewport when the BOARD
+   * size changes
    */
   useEffect(zoomBoardIfNeeded, [props.cols, props.rows]);
+
+  /**
+   * Zoom out on the board if it gets too big for the viewport when the WINDOW
+   * size changes
+   */
+  useEffect(() => {
+    const resizeHandler = debounce(zoomBoardIfNeeded, 500);
+
+    window.addEventListener("resize", resizeHandler);
+
+    return () => window.removeEventListener("resize", resizeHandler);
+  }, [zoomBoardIfNeeded]);
 
   return (
     <Root ref={rootNode as any}>
