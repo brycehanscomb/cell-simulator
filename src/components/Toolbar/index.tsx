@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Root, SideBySide, ThreeUp, Splitter } from "./styled";
+import { Root, SideBySide, ThreeUp, Splitter, Text } from "./styled";
 import Button from "../Button";
 import { useEffect, useState } from "react";
 
@@ -53,6 +53,10 @@ const Toolbar = ({ onStep, ...props }: Props) => {
 
   return (
     <Root>
+      <Text>
+        Use these controls to manipulate life-cycle of the cells according to
+        the rules.
+      </Text>
       <SideBySide>
         <Button onClick={onStep}>Next Generation</Button>
         <Button onClick={toggleAutoPlay} vibrant={isAutoPlaying}>
@@ -60,6 +64,9 @@ const Toolbar = ({ onStep, ...props }: Props) => {
         </Button>
       </SideBySide>
       <Splitter />
+      <Text>
+        Use these controls to manipulate the size of the board on the stage.
+      </Text>
       <ThreeUp>
         <Button onClick={handleResizeButtonClick("row", -1)}>-</Button>
         <span>
@@ -75,7 +82,9 @@ const Toolbar = ({ onStep, ...props }: Props) => {
         <Button onClick={handleResizeButtonClick("col", 1)}>+</Button>
       </ThreeUp>
       <Splitter />
-
+      <Text>
+        Use these shortcut controls to manipulate which cells are alive.
+      </Text>
       <SideBySide>
         <Button onClick={props.onClearBoard}>Empty Board</Button>
         <Button onClick={props.onResetBoard}>Reset</Button>
@@ -84,6 +93,9 @@ const Toolbar = ({ onStep, ...props }: Props) => {
         <Button onClick={props.onRandomiseBoard}>Randomise</Button>
         <Button>Import Image</Button>
       </SideBySide>
+      <Text>
+        <small>(You can also click the cells to change them!)</small>
+      </Text>
     </Root>
   );
 };

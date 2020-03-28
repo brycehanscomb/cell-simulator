@@ -38,3 +38,10 @@ export const Splitter = styled.hr`
   border-top: none;
   width: 100%;
 `;
+
+export const Text = styled.p`
+  margin: 0 0 5px;
+  font-size: 0.9em;
+  font-style: italic;
+  text-align: center;
+`;
