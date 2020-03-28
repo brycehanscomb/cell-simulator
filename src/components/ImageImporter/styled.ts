@@ -32,7 +32,7 @@ export const Content = styled.div`
   background: #f2f2f2;
   padding: 20px;
   width: 600px;
-  height: 440px;
+  height: 740px;
   position: relative;
   z-index: 10;
   color: #222;
@@ -49,11 +49,14 @@ export const CloseButton = styled(Button)`
 `;
 
 export const BackgroundPreview = styled.div<{ src: string }>`
-  width: 300px;
-  height: 300px;
   background-color: #cdcdcd;
   background-image: url(${props => props.src});
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+
+  &:after {
+    content: "";
+    padding-bottom: 62.5%;
+  }
 `;
