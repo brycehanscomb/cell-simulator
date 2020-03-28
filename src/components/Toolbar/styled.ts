@@ -13,7 +13,12 @@ export const Root = styled.nav`
   grid-auto-rows: auto;
   grid-row-gap: ${paddingSize};
   align-content: start;
-  border-left: 2px solid rgba(255, 255, 255, 0.7);
+  border-top: 2px solid rgba(255, 255, 255, 0.7);
+
+  @media only screen and (min-width: 640px) {
+    border-top: 0;
+    border-left: 2px solid rgba(255, 255, 255, 0.7);
+  }
 `;
 
 export const SideBySide = styled.div`
