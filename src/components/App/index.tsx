@@ -58,7 +58,16 @@ const readStateFromUrl = (): GameState => {
       .split("")
       .map(value => parseMap[value as "0" | "1"] as CellValue);
   } else {
-    boardState = Array(rows * cols).fill(DEAD);
+    // prettier-ignore
+    boardState = [
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 1, 0, 0, 0, 0, 1, 0,
+      0, 1, 1, 1, 1, 1, 1, 0,
+      1, 0, 0, 1, 1, 0, 1, 1,
+      0, 1, 1, 0, 0, 1, 1, 0,
+      0, 0, 0, 1, 1, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0
+    ];
   }
 
   return {
@@ -67,19 +76,6 @@ const readStateFromUrl = (): GameState => {
     cols
   };
 };
-
-// prettier-ignore
-let initialState: BoardState = [
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 0, 0, 0, 1, 0,
-    0, 1, 1, 1, 1, 1, 1, 0,
-    1, 0, 0, 1, 1, 0, 1, 1,
-    0, 1, 1, 0, 0, 1, 1, 0,
-    0, 0, 0, 1, 1, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0
-];
-
-initialState = readStateFromUrl().boardState;
 
 const saveState = (boardState: BoardState, rows: number, cols: number) => {
   const url = new URL(window.location.href);
