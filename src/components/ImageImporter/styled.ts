@@ -47,3 +47,13 @@ export const CloseButton = styled(Button)`
   top: 20px;
   right: 20px;
 `;
+
+export const BackgroundPreview = styled.div<{ src: string }>`
+  width: 300px;
+  height: 300px;
+  background-color: #cdcdcd;
+  background-image: url(${props => props.src});
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+`;
