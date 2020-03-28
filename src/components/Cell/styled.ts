@@ -62,11 +62,14 @@ export const Root = styled.button<{
 
   &:hover,
   &:focus {
-    transform: scale(1.1);
+    transform: scale(0.9);
+    background: ${props =>
+      shadeColor(props.value === ALIVE ? colors[ALIVE] : colors[DEAD], 10)};
   }
 
   &:active {
-    transform: scale(1);
-    background: ${colors.pressed};
+    transform: scale(0.9);
+    background: ${props =>
+      shadeColor(props.value === ALIVE ? colors[ALIVE] : colors[DEAD], -30)};
   }
 `;
