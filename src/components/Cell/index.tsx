@@ -1,22 +1,32 @@
-import * as React from 'react'
-import {CellValue} from "../../util/game";
+import * as React from "react";
+import { CellValue } from "../../util/game";
 
-import {Root} from './styled'
+import { Root } from "./styled";
+import { useEffect, useState } from "react";
 
 interface Props {
-    value: CellValue
-    onClick: (e: React.MouseEvent) => void
-    rowOffset: number;
+  value: CellValue;
+  onClick: (e: React.MouseEvent) => void;
+  rowOffset: number;
 }
 
-const Cell = ({value, onClick, rowOffset}: Props) => {
-    return (
-        <Root onClick={onClick} value={value} rowOffset={rowOffset}>
-            {value}
-        </Root>
-    )
-}
+const Cell = ({ value, onClick, rowOffset }: Props) => {
+  const [hasEntered, setHasEntered] = useState(false);
 
-Cell.displayName = 'Cell'
+  useEffect(() => {
+    setHasEntered(true);
+  }, []);
 
-export default Cell
+  return (
+    <Root
+      onClick={onClick}
+      value={value}
+      rowOffset={rowOffset}
+      hasEntered={hasEntered}
+    />
+  );
+};
+
+Cell.displayName = "Cell";
+
+export default Cell;
