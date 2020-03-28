@@ -61,5 +61,5 @@ export const padBoard = (
 };
 
 // todo: move this
-const repeat = (val: any, howManyTimes: number) =>
+export const repeat = (val: any, howManyTimes: number) =>
   Array(howManyTimes).fill(val);

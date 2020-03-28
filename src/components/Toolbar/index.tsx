@@ -1,13 +1,19 @@
 import * as React from "react";
 import { Root, SideBySide, ThreeUp, Splitter } from "./styled";
 import Button from "../Button";
+import { useEffect, useState } from "react";
 
 export const MIN_ROWS = 4;
 export const MIN_COLS = 4;
 
+const STEP_TIME = 333;
+
 interface Props {
   onStep: () => void;
   onChangeBoardSize: (newRows: number, newCols: number) => void;
+  onClearBoard: () => void;
+  onResetBoard: () => void;
+  onRandomiseBoard: () => void;
   rows: number;
   cols: number;
 }
@@ -21,7 +27,7 @@ const pluralize = (singular: string, multiple: string, quantity: number) => {
   }
 };
 
-const Toolbar = (props: Props) => {
+const Toolbar = ({ onStep, ...props }: Props) => {
   const handleResizeButtonClick = (which: "row" | "col", delta: -1 | 1) => (
     e: React.MouseEvent
   ) => {
@@ -31,11 +37,27 @@ const Toolbar = (props: Props) => {
     );
   };
 
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
+
+  const toggleAutoPlay = () => setIsAutoPlaying(!isAutoPlaying);
+
+  useEffect(() => {
+    let timer: number;
+
+    if (isAutoPlaying) {
+      timer = setTimeout(onStep, STEP_TIME);
+    }
+
+    return () => clearTimeout(timer);
+  }, [isAutoPlaying, onStep]);
+
   return (
     <Root>
       <SideBySide>
-        <Button onClick={props.onStep}>Next Generation</Button>
-        <Button>Auto-Play</Button>
+        <Button onClick={onStep}>Next Generation</Button>
+        <Button onClick={toggleAutoPlay}>
+          {isAutoPlaying ? "Stop" : "Auto-Play"}
+        </Button>
       </SideBySide>
       <Splitter />
       <ThreeUp>
@@ -55,11 +77,11 @@ const Toolbar = (props: Props) => {
       <Splitter />
 
       <SideBySide>
-        <Button>Empty Board</Button>
-        <Button>Reset</Button>
+        <Button onClick={props.onClearBoard}>Empty Board</Button>
+        <Button onClick={props.onResetBoard}>Reset</Button>
       </SideBySide>
       <SideBySide>
-        <Button>Randomise</Button>
+        <Button onClick={props.onRandomiseBoard}>Randomise</Button>
         <Button>Import Image</Button>
       </SideBySide>
     </Root>
