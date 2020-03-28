@@ -22,10 +22,16 @@ const Stage = (props: Props) => {
 
       const boardHeight =
         CELL_SIDE_LENGTH * props.rows + CELL_GAP * (props.rows - 1);
+      const boardWidth =
+        CELL_SIDE_LENGTH * props.cols + CELL_GAP * (props.cols - 1);
 
-      if (boardHeight > stageSize.height) {
-        const ratio = stageSize.height / boardHeight - OVERSIZE_RESCALE_MARGIN;
-        setScaleSize(ratio);
+      if (boardHeight > stageSize.height || boardWidth > stageSize.width) {
+        const heightRatio =
+          stageSize.height / boardHeight - OVERSIZE_RESCALE_MARGIN;
+        const widthRatio =
+          stageSize.width / boardWidth - OVERSIZE_RESCALE_MARGIN;
+
+        setScaleSize(Math.min(heightRatio, widthRatio));
       } else {
         setScaleSize(1);
       }
