@@ -60,3 +60,32 @@ export const BackgroundPreview = styled.div<{ src: string }>`
     padding-bottom: 62.5%;
   }
 `;
+
+export const ImageGallery = styled.div`
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-column-gap: 10px;
+  justify-content: start;
+`;
+
+export const ImageGalleryOption = styled.img.attrs({ height: 100 })`
+  border: 2px solid #cdcdcd;
+  transition: all 0.2s ease-out;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
+export const URLInput = styled.input`
+  font: inherit;
+  display: block;
+  width: 100%;
+  padding: 0.5em;
+`;

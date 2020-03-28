@@ -4,6 +4,7 @@ import { loadImage } from "../ImageImporter";
 import { chunk } from "lodash";
 import { ALIVE, DEAD } from "../../util/game";
 import { GameState } from "../App";
+import { colorsRGBA } from "../Cell/styled";
 
 interface Props {
   src: string;
@@ -24,8 +25,6 @@ const ImagePreview = ({
     width: number;
     height: number;
   }>();
-
-  const [ditheredData, setDitheredData] = useState<any>();
 
   useEffect(() => {
     /**
@@ -51,9 +50,10 @@ const ImagePreview = ({
     if (imageData && visibleNode.current) {
       let pixelChunks = chunk<number>(imageData.data, 4).map(([r, g, b, a]) => {
         if (a < 128) {
-          return ALIVE;
+          return DEAD;
         }
 
+        // decide based on this pixel's brightness
         if ((r + g + b) / 3 >= 128) {
           return ALIVE;
         } else {
@@ -69,9 +69,9 @@ const ImagePreview = ({
 
       const ditheredPixelChunks = pixelChunks.map(chunk => {
         if (chunk === ALIVE) {
-          return [255, 0, 0, 255];
+          return colorsRGBA[ALIVE];
         } else {
-          return [0, 0, 0, 0];
+          return colorsRGBA[DEAD];
         }
       });
 
@@ -105,6 +105,12 @@ const ImagePreview = ({
         ctx.scale(scale, scale);
         ctx.drawImage(imageObject, 0, 0);
         const scaledData = ctx.getImageData(0, 0, 30, 30);
+        canvas.height = 30;
+        canvas.width = 30;
+        ctx.scale(scale, scale);
+        ctx.drawImage(imageObject, 0, 0);
+        canvas.style.transform = `scale(${1 / scale})`;
+        canvas.style.transformOrigin = `top left`;
         const scaledCellValues = chunk<number>(scaledData.data, 4).map(i =>
           i[0] === 255 ? ALIVE : DEAD
         );

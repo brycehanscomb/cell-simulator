@@ -11,6 +11,11 @@ export const colors = {
   pressed: "#37474F"
 };
 
+export const colorsRGBA = {
+  [ALIVE]: [255, 152, 0, 255],
+  [DEAD]: [96, 125, 139, 255]
+};
+
 /**
  * We have a nice shading effect on each cell depending on where it is,
  * but if not tempered, the effect can be too much. This will attenuate it a bit.
