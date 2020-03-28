@@ -55,7 +55,7 @@ const Toolbar = ({ onStep, ...props }: Props) => {
     <Root>
       <SideBySide>
         <Button onClick={onStep}>Next Generation</Button>
-        <Button onClick={toggleAutoPlay}>
+        <Button onClick={toggleAutoPlay} vibrant={isAutoPlaying}>
           {isAutoPlaying ? "Stop" : "Auto-Play"}
         </Button>
       </SideBySide>

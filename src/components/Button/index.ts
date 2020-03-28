@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Button = styled.button`
+const Button = styled.button<{ vibrant?: boolean }>`
   -webkit-appearance: none;
   -moz-appearance: none;
   border: 0px solid rgba(255, 255, 255, 0.25);
@@ -9,7 +9,7 @@ const Button = styled.button`
   justify-content: center;
   align-items: center;
   color: white;
-  background: #22222299;
+  background: ${props => (props.vibrant ? "#E64A19" : "#22222299")};
   padding: 10px;
   line-height: 1;
   text-transform: uppercase;
@@ -19,11 +19,11 @@ const Button = styled.button`
 
   &:hover,
   &:focus {
-    background: #22222266;
+    background: ${props => (props.vibrant ? "#FF5722" : "#22222266")};
   }
 
   &:active {
-    background: #222222ff;
+    background: ${props => (props.vibrant ? "#BF360C" : "#222222ff")};
   }
 `;
 
