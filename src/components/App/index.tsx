@@ -95,7 +95,7 @@ function App() {
 
   return (
     <Root>
-      <Stage>
+      <Stage cols={cols} rows={rows}>
         <Board
           boardState={boardState}
           cols={cols}

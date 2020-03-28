@@ -5,5 +5,11 @@ export const Root = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: auto;
+  overflow: hidden;
+  position: relative;
+`;
+
+export const SizeMonitor = styled.div<{ scale: number }>`
+  transition: transform 0.5s ease;
+  transform: scale(${props => props.scale});
 `;
