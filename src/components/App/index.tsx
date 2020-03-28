@@ -1,59 +1,74 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 import Board from "../Board";
-import {ALIVE, BoardState, CellValue, DEAD, getNextGeneration} from "../../util/game";
+import {
+  ALIVE,
+  BoardState,
+  CellValue,
+  DEAD,
+  getNextGeneration
+} from "../../util/game";
 
-import {Root} from './styled'
+import { Root } from "./styled";
 import Stage from "../Stage";
 import Toolbar from "../Toolbar";
+import { cropBoard, padBoard } from "../../util/board";
 
 export interface GameState {
-    boardState: BoardState;
-    rows: number;
-    cols: number;
+  boardState: BoardState;
+  rows: number;
+  cols: number;
 }
 
 const parseMap = {
-    '0': DEAD,
-    '1': ALIVE
+  "0": DEAD,
+  "1": ALIVE
 };
 
-const hashState = (boardState: BoardState, rows: number, cols: number): string => {
-    return `${boardState.join('')}@${cols}x${rows}`
-}
+const hashState = (
+  boardState: BoardState,
+  rows: number,
+  cols: number
+): string => {
+  return `${boardState.join("")}@${cols}x${rows}`;
+};
 
 const readStateFromUrl = (): GameState => {
-    const {searchParams} = new URL(window.location.href)
+  const { searchParams } = new URL(window.location.href);
 
-    let boardState: BoardState;
-    let rows: number;
-    let cols: number;
+  let boardState: BoardState;
+  let rows: number;
+  let cols: number;
 
-    if (searchParams.has('cols')) {
-        cols = parseInt(searchParams.get('cols')!, 10)
-    } else {
-        cols = 8
-    }
+  if (searchParams.has("cols")) {
+    cols = parseInt(searchParams.get("cols")!, 10);
+  } else {
+    cols = 8;
+  }
 
-    if (searchParams.has('rows')) {
-        rows = parseInt(searchParams.get('rows')!, 10)
-    } else {
-        rows = 8
-    }
+  if (searchParams.has("rows")) {
+    rows = parseInt(searchParams.get("rows")!, 10);
+  } else {
+    rows = 8;
+  }
 
-    if (searchParams.has('boardState')) {
-        // todo: validate values in here and also check for board size params
-        boardState = searchParams.get('boardState')!.split('').map((value) => parseMap[value as '0' | '1'] as CellValue)
-    } else {
-        boardState = Array(rows * cols).fill(DEAD)
-    }
+  if (searchParams.has("boardState")) {
+    // todo: validate values in here and also check for board size params
+    boardState = searchParams
+      .get("boardState")!
+      .split("")
+      .map(value => parseMap[value as "0" | "1"] as CellValue);
+  } else {
+    boardState = Array(rows * cols).fill(DEAD);
+  }
 
-    return {
-        boardState,
-        rows,
-        cols
-    }
-}
+  return {
+    boardState,
+    rows,
+    cols
+  };
+};
 
+// prettier-ignore
 let initialState: BoardState = [
     0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 0, 0, 0, 1, 0,
@@ -64,61 +79,91 @@ let initialState: BoardState = [
     0, 0, 0, 0, 0, 0, 0, 0
 ];
 
-initialState = readStateFromUrl().boardState
-
-const noop = () => {
-}
+initialState = readStateFromUrl().boardState;
 
 const saveState = (boardState: BoardState, rows: number, cols: number) => {
-    const url = new URL(window.location.href)
-    url.searchParams.set('boardState', boardState.join(''));
-    url.searchParams.set('rows', rows.toString());
-    url.searchParams.set('cols', cols.toString());
+  const url = new URL(window.location.href);
+  url.searchParams.set("boardState", boardState.join(""));
+  url.searchParams.set("rows", rows.toString());
+  url.searchParams.set("cols", cols.toString());
 
-    window.history.pushState({boardState, rows, cols}, '', url.toString())
-}
+  window.history.pushState({ boardState, rows, cols }, "", url.toString());
+};
 
-const initialGameState = readStateFromUrl()
+const initialGameState = readStateFromUrl();
 
 function App() {
-    const [boardState, setBoardState] = useState<BoardState>(initialGameState.boardState)
+  const [boardState, setBoardState] = useState<BoardState>(
+    initialGameState.boardState
+  );
+  const [rows, setRows] = useState<number>(initialGameState.rows);
+  const [cols, setCols] = useState<number>(initialGameState.cols);
 
-    /**
-     * @todo: just keep these in mutable state like boardstate is
-     */
-    const rows = initialGameState.rows
-    const cols = initialGameState.cols
+  const step = () => setBoardState(getNextGeneration(boardState, rows, cols));
 
-    const step = () => setBoardState(
-        getNextGeneration(boardState, rows, cols)
-    )
+  const handleBoardSizeChange = (newRows: number, newCols: number) => {
+    let newBoardState: BoardState;
 
-    useEffect(() => {
-        if (hashState(boardState, rows, cols) !== hashState(readStateFromUrl().boardState, rows, cols)) { // todo: read ros/cols from url too
-            saveState(boardState, rows, cols)
-        }
-    }, [boardState, rows, cols])
+    if (newRows < rows || newCols < cols) {
+      // If the board is getting smaller
+      newBoardState = cropBoard(boardState, rows, cols, newRows, newCols);
+    } else {
+      // otherwise it's getting bigger
+      newBoardState = padBoard(
+        boardState,
+        rows,
+        cols,
+        newRows - rows,
+        newCols - cols,
+        DEAD
+      );
+    }
 
-    useEffect(() => {
-        const handleHistoryChange = ({state}: any) => {
-            if (state) {
-                setBoardState(state.boardState);
-            }
-        };
+    setBoardState(newBoardState);
+    setRows(newRows);
+    setCols(newCols);
+  };
 
-        window.addEventListener('popstate', handleHistoryChange)
+  useEffect(() => {
+    const urlState = readStateFromUrl();
+    if (
+      hashState(boardState, rows, cols) !==
+      hashState(urlState.boardState, urlState.rows, urlState.cols)
+    ) {
+      saveState(boardState, rows, cols);
+    }
+  }, [boardState, rows, cols]);
 
-        return () => window.removeEventListener('popstate', handleHistoryChange)
-    }, [setBoardState]);
+  useEffect(() => {
+    const handleHistoryChange = ({ state }: any) => {
+      if (state) {
+        setBoardState(state.boardState);
+      }
+    };
 
-    return (
-        <Root>
-            <Stage>
-                <Board boardState={boardState} cols={cols} rows={rows} onBoardStateChanged={setBoardState}/>
-            </Stage>
-            <Toolbar onStep={step}/>
-        </Root>
-    );
+    window.addEventListener("popstate", handleHistoryChange);
+
+    return () => window.removeEventListener("popstate", handleHistoryChange);
+  }, [setBoardState, rows, cols]);
+
+  return (
+    <Root>
+      <Stage>
+        <Board
+          boardState={boardState}
+          cols={cols}
+          rows={rows}
+          onBoardStateChanged={setBoardState}
+        />
+      </Stage>
+      <Toolbar
+        onStep={step}
+        onChangeBoardSize={handleBoardSizeChange}
+        rows={rows}
+        cols={cols}
+      />
+    </Root>
+  );
 }
 
 export default App;
