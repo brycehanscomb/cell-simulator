@@ -2,6 +2,7 @@ import * as React from "react";
 import { Root, SideBySide, ThreeUp, Splitter, Text } from "./styled";
 import Button from "../Button";
 import { useEffect, useState } from "react";
+import ImageImporter from "../ImageImporter";
 
 export const MIN_ROWS = 4;
 export const MIN_COLS = 4;
@@ -37,6 +38,7 @@ const Toolbar = ({ onStep, ...props }: Props) => {
     );
   };
 
+  const [isImageImporterShowing, setIsImageImporterShowing] = useState(false);
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
 
   const toggleAutoPlay = () => setIsAutoPlaying(!isAutoPlaying);
@@ -91,11 +93,16 @@ const Toolbar = ({ onStep, ...props }: Props) => {
       </SideBySide>
       <SideBySide>
         <Button onClick={props.onRandomiseBoard}>Randomise</Button>
-        <Button>Import Image</Button>
+        <Button vibrant onClick={() => setIsImageImporterShowing(true)}>
+          Import Image
+        </Button>
       </SideBySide>
       <Text>
         <small>(You can also click the cells to change them!)</small>
       </Text>
+      {isImageImporterShowing && (
+        <ImageImporter onCancel={() => setIsImageImporterShowing(false)} />
+      )}
     </Root>
   );
 };
