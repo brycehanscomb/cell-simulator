@@ -26,6 +26,7 @@ This app does many things including:
 - Powerful game board seeding tools (eg: randomise)
 - Import an image to use as the initial game state
 - Works on big screens, tablets and even mobile-sized devices!
+- A thoughtful fallback message for users with Javascript disabled
 
 ## Roadmap
 
