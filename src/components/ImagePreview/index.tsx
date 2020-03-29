@@ -133,7 +133,3 @@ const ImagePreview = ({
 };
 
 export default ImagePreview;
-
-/*
-https://cdn.glitch.com/4c9ebeb9-8b9a-4adc-ad0a-238d9ae00bb5%2Fmdn_logo-only_color.svg?1535749917189
- */

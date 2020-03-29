@@ -44,6 +44,7 @@ import { Root } from "./styled";
 /******************************************************************************/
 
 const initialGameState = readStateFromUrl();
+const historyChangeEventName = "popstate";
 
 function App() {
   /**
@@ -60,7 +61,7 @@ function App() {
    *
    * /---------------------\
    * | DEAD   ALIVE   DEAD |                           [ 0, 1, 0,
-   * | ALIVE  ALIVE  ALIVE |  --- (visualised as) -->    1, 1, 1,
+   * | ALIVE  ALIVE  ALIVE |  ----- (stored as) ---->    1, 1, 1,
    * | DEAD   ALIVE   DEAD |                             0, 1, 0 ]
    * \---------------------/
    *
@@ -194,9 +195,10 @@ function App() {
       }
     };
 
-    window.addEventListener("popstate", handleHistoryChange);
+    window.addEventListener(historyChangeEventName, handleHistoryChange);
 
-    return () => window.removeEventListener("popstate", handleHistoryChange);
+    return () =>
+      window.removeEventListener(historyChangeEventName, handleHistoryChange);
   }, [setBoardState, rows, cols]);
 
   return (

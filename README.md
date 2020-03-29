@@ -36,6 +36,7 @@ Here's some things that should be improved further:
 - [ ] More comprehensive tests
 - [ ] More reliable history navigation (back/forward buttons sometimes break the app)
 - [ ] Better responsive design for Image Importer
+- [ ] Error Boundaries to stop the whole app crashing if there's a localised error
 
 ## Developing
 
