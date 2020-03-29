@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 
 import { GameState } from "../../types";
 import { MIN_COLS, MIN_ROWS } from "../../constants";
+import { pluralize } from "../../util/string";
 
 import Button from "../Button";
 import ImageImporter from "../ImageImporter";
 
 import { Root, SideBySide, Splitter, Text, ThreeUp } from "./styled";
-import { pluralize } from "../../util/string";
 
 /**
  * Milliseconds between generations when auto-playing
