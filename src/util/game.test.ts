@@ -164,7 +164,7 @@ describe("getIndexFromCoords", () => {
 
   it("should get the correct index given a set of co-ordinates", () => {
     expect(getIndexFromCoords({ row: 6, col: 2 }, 7, 8)).toEqual(50);
-    expect(getIndexFromCoords({ row: 2, col: 2 }, 3, 8)).toEqual(50);
-    expect(getIndexFromCoords({ row: 6, col: 2 }, 10, 3)).toEqual(50);
+    expect(getIndexFromCoords({ row: 2, col: 2 }, 3, 8)).toEqual(18);
+    expect(getIndexFromCoords({ row: 6, col: 2 }, 10, 3)).toEqual(20);
   });
 });
