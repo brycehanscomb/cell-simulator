@@ -1,10 +1,19 @@
+/******************************************************************************\
+ *
+ * WARNING: The code in this file really sucks and is not cleaned up. Please
+ * just look away, it's better for everybody that way. :^)
+ *
+ /******************************************************************************/
+
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { chunk } from "lodash";
-import { colorsRGBA } from "../Cell/styled";
-import { GameState } from "../../types";
+
 import { ALIVE, DEAD } from "../../constants";
-import { loadImage } from "../../util/image";
+import { GameState } from "../../types";
+import { getCellValueFromPixelColors, loadImage } from "../../util/image";
+
+import { colorsRGBA } from "../Cell/styled";
 
 interface Props {
   src: string;
@@ -17,22 +26,18 @@ const ImagePreview = ({
   allowCrossOriginImageLoading,
   onSubmit
 }: Props) => {
-  const rootNode = useRef<HTMLCanvasElement>();
-  const visibleNode = useRef<HTMLCanvasElement>();
+  const hiddenCanvas = useRef<HTMLCanvasElement>();
+  const visibleCanvas = useRef<HTMLCanvasElement>();
 
-  const [imageData, setImageData] = useState<{
-    data: Uint8ClampedArray;
-    width: number;
-    height: number;
-  }>();
+  const [imageData, setImageData] = useState<ImageData>();
 
   useEffect(() => {
     /**
      * @see https://stackoverflow.com/a/27705693
      */
     loadImage(src, allowCrossOriginImageLoading).then(evt => {
-      if (rootNode.current) {
-        const cvs = rootNode.current;
+      if (hiddenCanvas.current) {
+        const cvs = hiddenCanvas.current;
         const img = evt.target;
 
         cvs.width = img.width;
@@ -47,21 +52,12 @@ const ImagePreview = ({
   }, [src, allowCrossOriginImageLoading]);
 
   useEffect(() => {
-    if (imageData && visibleNode.current) {
-      let pixelChunks = chunk<number>(imageData.data, 4).map(([r, g, b, a]) => {
-        if (a < 128) {
-          return DEAD;
-        }
+    if (imageData && visibleCanvas.current) {
+      let pixelChunks = chunk<number>(imageData.data, 4).map(
+        getCellValueFromPixelColors
+      );
 
-        // decide based on this pixel's brightness
-        if ((r + g + b) / 3 >= 100) {
-          return ALIVE;
-        } else {
-          return DEAD;
-        }
-      });
-
-      const canvas = visibleNode.current;
+      const canvas = visibleCanvas.current;
 
       canvas.width = imageData.width;
       canvas.height = imageData.height;
@@ -78,13 +74,17 @@ const ImagePreview = ({
       const pixelStream = ditheredPixelChunks.flat();
 
       const newImage = ctx.createImageData(
-        visibleNode.current.width,
-        visibleNode.current.height
+        visibleCanvas.current.width,
+        visibleCanvas.current.height
       );
 
+      /**
+       * Write the pixels from our pixel stream into the image data object.
+       * @todo: surely there's a way to do this in O(1) instead of O(n)?
+       */
       for (
         let ii = 0;
-        ii < visibleNode.current.width * visibleNode.current.height * 4;
+        ii < visibleCanvas.current.width * visibleCanvas.current.height * 4;
         ii++
       ) {
         newImage.data[ii] = pixelStream[ii];
@@ -93,12 +93,19 @@ const ImagePreview = ({
       ctx.putImageData(newImage, 0, 0);
 
       /**
+       * Create an image from the canvas
+       * Clear & scale the canvas
+       * Draw the image to the canvas
+       *
        * @see https://stackoverflow.com/a/24468840
        */
-      // create an image from the canvas
-      // clear & scale the canvas
-      // draw the image to the canvas
-      var imageObject = new Image();
+      const imageObject = new Image();
+
+      /**
+       * Write the 1-bit pixel values to the canvas as an image, then read that
+       * image here to get them for further analysis and re-sizing to the size
+       * of the board.
+       */
       imageObject.onload = function() {
         const scale = 30 / canvas.width; // resize to 30px wide (todo: constrain to the biggest size / side)
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -118,6 +125,7 @@ const ImagePreview = ({
           cols: 30
         });
       };
+
       canvas.style.width = "auto";
       canvas.style.height = "300px";
       imageObject.src = canvas.toDataURL();
@@ -126,10 +134,10 @@ const ImagePreview = ({
 
   return (
     <>
-      <canvas style={{ display: "none" }} ref={rootNode as any} />
-      <canvas ref={visibleNode as any} />
+      <canvas style={{ display: "none" }} ref={hiddenCanvas as any} />
+      <canvas ref={visibleCanvas as any} />
     </>
-  ); // todo: don't do `as any` here
+  );
 };
 
 export default ImagePreview;

@@ -1,3 +1,5 @@
+import { ALIVE, DEAD } from "../constants";
+
 export const loadImage = (
   url: string,
   allowCrossOrigin: boolean = false
@@ -24,4 +26,23 @@ export const loadImage = (
     };
     img.src = url;
   });
+};
+
+/**
+ * Given an [rgba] pixel, determine whether that pixel is bright enough to
+ * warrant being mapped to an ALIVE pixel or a DEAD pixel.
+ *
+ * Each subpixel value is a Uint8 (0 to 255)
+ */
+export const getCellValueFromPixelColors = ([r, g, b, a]: number[]) => {
+  if (a < 128) {
+    return DEAD;
+  }
+
+  // decide based on this pixel's brightness
+  if ((r + g + b) / 3 >= 100) {
+    return ALIVE;
+  } else {
+    return DEAD;
+  }
 };
