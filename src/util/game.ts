@@ -8,6 +8,9 @@ interface Neighbors {
   west: CellValue;
 }
 
+/**
+ * Coords (short for Co-ordinates) represents a vector or a position on the board
+ */
 interface Coords {
   row: number;
   col: number;
@@ -122,15 +125,3 @@ export const getNextGeneration = (
     }
   });
 };
-
-/*
-const before: Board = [
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 1, 0, 0, 0, 0, 1, 0,
-            0, 1, 1, 1, 1, 1, 1, 0,
-            1, 0, 0, 1, 1, 0, 1, 1,
-            0, 1, 1, 0, 0, 1, 1, 0,
-            0, 0, 0, 1, 1, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0
-        ]
- */
