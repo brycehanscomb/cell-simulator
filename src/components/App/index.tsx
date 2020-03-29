@@ -21,7 +21,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { BoardState, GameState } from "../../types";
 import { ALIVE, DEAD } from "../../constants";
 import { getNextGeneration } from "../../util/game";
-import { cropBoard, padBoard, repeat } from "../../util/board";
+import { cropBoard, padBoard } from "../../util/board";
 import {
   hashState,
   readStateFromUrl,
@@ -40,6 +40,7 @@ import Toolbar from "../Toolbar";
  * Locally-defined styled components
  */
 import { Root } from "./styled";
+import { repeat } from "../../util/array";
 
 /******************************************************************************/
 

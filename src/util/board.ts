@@ -3,6 +3,7 @@
 import { chunk } from "lodash";
 
 import { BoardState, CellValue } from "../types";
+import { repeat } from "./array";
 
 /**
  * Like cropping off the right- and bottom-edges of an image,
@@ -59,7 +60,3 @@ export const padBoard = (
 
   return rowChunks.flat();
 };
-
-// todo: move this
-export const repeat = (val: any, howManyTimes: number) =>
-  Array(howManyTimes).fill(val);
