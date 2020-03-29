@@ -32,7 +32,8 @@ export const Content = styled.div`
   background: #f2f2f2;
   padding: 20px;
   width: 600px;
-  height: 740px;
+  height: 85vh;
+  overflow-y: auto;
   position: relative;
   z-index: 10;
   color: #222;
