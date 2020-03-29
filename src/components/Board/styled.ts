@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
-export const CELL_SIDE_LENGTH = 50;
-export const CELL_GAP = 3;
+import { CELL_GAP, CELL_SIDE_LENGTH } from "../../constants";
 
 export const Root = styled.div<{ rows: number; cols: number }>`
   display: grid;

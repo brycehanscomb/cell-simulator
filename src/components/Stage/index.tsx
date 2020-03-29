@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Root, SizeMonitor } from "./styled";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CELL_GAP, CELL_SIDE_LENGTH } from "../Board/styled";
 import { debounce } from "lodash";
+
+import { Root, SizeMonitor } from "./styled";
+import { CELL_GAP, CELL_SIDE_LENGTH } from "../../constants";
 
 interface Props {
   rows: number;
@@ -10,6 +11,9 @@ interface Props {
   children: React.ReactNode;
 }
 
+/**
+ * Ensure there's always a bit of padding between the stage edge and the board
+ */
 const OVERSIZE_RESCALE_MARGIN = 0.05;
 
 const Stage = (props: Props) => {

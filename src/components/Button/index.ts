@@ -3,7 +3,7 @@ import styled from "styled-components";
 const Button = styled.button<{ vibrant?: boolean }>`
   -webkit-appearance: none;
   -moz-appearance: none;
-  border: 0px solid rgba(255, 255, 255, 0.25);
+  border: 0 solid rgba(255, 255, 255, 0.25);
   font: inherit;
   display: inline-flex;
   justify-content: center;

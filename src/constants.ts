@@ -14,3 +14,9 @@ export const ALIVE = 1;
  */
 export const MIN_ROWS = 4;
 export const MIN_COLS = 4;
+
+/**
+ * Layout and sizing for cells on stage, in pixels
+ */
+export const CELL_SIDE_LENGTH = 50;
+export const CELL_GAP = 3;
