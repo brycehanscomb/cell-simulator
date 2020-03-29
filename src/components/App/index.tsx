@@ -23,9 +23,9 @@ import { ALIVE, DEAD } from "../../constants";
 import { getNextGeneration } from "../../util/game";
 import { cropBoard, padBoard } from "../../util/board";
 import {
+  emptyGameState,
   hashState,
   readStateFromUrl,
-  sampleState,
   saveState
 } from "../../util/url";
 
@@ -111,7 +111,7 @@ function App() {
    * is a good starting point for players.
    */
   const resetBoard = () => {
-    setGameState(sampleState);
+    setGameState(emptyGameState);
   };
 
   /**

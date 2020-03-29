@@ -1,5 +1,6 @@
 import { BoardState, CellValue, GameState } from "../types";
 import { ALIVE, DEAD, MIN_COLS, MIN_ROWS } from "../constants";
+import { repeat } from "./array";
 
 /**
  * How the values of the board state as serialised in the URL map to their
@@ -38,22 +39,8 @@ export const hashState = (
   return `${boardState.join("")}@${cols}x${rows}`;
 };
 
-/**
- * Nothing special about this other than it looks interesting when run
- */
-// prettier-ignore
-const sampleBoard = [
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 0, 0, 0, 1, 0,
-    0, 1, 1, 0, 0, 1, 1, 0,
-    1, 1, 0, 1, 1, 0, 1, 1,
-    0, 1, 1, 0, 0, 1, 1, 0,
-    0, 0, 0, 1, 1, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0
-];
-
-export const sampleState: GameState = {
-  boardState: sampleBoard,
+export const emptyGameState: GameState = {
+  boardState: repeat(DEAD, 7 * 8),
   rows: 7,
   cols: 8
 };
@@ -68,13 +55,13 @@ export const readStateFromUrl = (): GameState => {
   if (searchParams.has(URL_PARAMS.COLS)) {
     cols = Math.max(parseInt(searchParams.get(URL_PARAMS.COLS)!, 10), MIN_COLS);
   } else {
-    cols = sampleState.cols;
+    cols = emptyGameState.cols;
   }
 
   if (searchParams.has(URL_PARAMS.ROWS)) {
     rows = Math.max(parseInt(searchParams.get(URL_PARAMS.ROWS)!, 10), MIN_ROWS);
   } else {
-    rows = sampleState.rows;
+    rows = emptyGameState.rows;
   }
 
   if (searchParams.has(URL_PARAMS.BOARD_STATE)) {
@@ -95,12 +82,12 @@ export const readStateFromUrl = (): GameState => {
      * World's dumbest validation:
      */
     if (boardState.length !== rows * cols) {
-      boardState = sampleState.boardState;
-      rows = sampleState.rows;
-      cols = sampleState.cols;
+      boardState = emptyGameState.boardState;
+      rows = emptyGameState.rows;
+      cols = emptyGameState.cols;
     }
   } else {
-    boardState = sampleState.boardState;
+    boardState = emptyGameState.boardState;
   }
 
   return {
