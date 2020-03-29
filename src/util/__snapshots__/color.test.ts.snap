@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Utils::color shadeColor should correctly darken images by the specified amount when \`percent\` is negative 1`] = `"#037c89"`;
+
+exports[`Utils::color shadeColor should correctly darken images by the specified amount when \`percent\` is negative 2`] = `"#bf0000"`;
+
+exports[`Utils::color shadeColor should correctly darken images by the specified amount when \`percent\` is negative 3`] = `"#bfbfbf"`;
+
+exports[`Utils::color shadeColor should correctly lighten images by the specified amount when \`percent\` is positive 1`] = `"#06cfe4"`;
+
+exports[`Utils::color shadeColor should correctly lighten images by the specified amount when \`percent\` is positive 2`] = `"#ff0000"`;
+
+exports[`Utils::color shadeColor should correctly lighten images by the specified amount when \`percent\` is positive 3`] = `"#00ff2e"`;
