@@ -55,9 +55,7 @@ export const loadImage = (
 };
 
 const ImageImporter = (props: Props) => {
-  const [targetUrl, setTargetUrl] = useState<string>(
-    "" //"https://cdn.glitch.com/4c9ebeb9-8b9a-4adc-ad0a-238d9ae00bb5%2Fmdn_logo-only_color.svg?1535749917189\n"
-  );
+  const [targetUrl, setTargetUrl] = useState<string>("");
   const [err, setErr] = useState<Error>();
   const [step, setStep] = useState(0);
 
