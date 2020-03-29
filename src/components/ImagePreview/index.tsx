@@ -105,8 +105,8 @@ const ImagePreview = ({
         ctx.scale(scale, scale);
         ctx.drawImage(imageObject, 0, 0);
         const scaledData = ctx.getImageData(0, 0, 30, 30);
-        canvas.height = 300;
-        canvas.width = 300;
+        canvas.width = imageData.width;
+        canvas.height = imageData.height;
         ctx.drawImage(imageObject, 0, 0);
         const scaledCellValues = chunk<number>(scaledData.data, 4).map(i =>
           i[0] === 255 ? ALIVE : DEAD
@@ -118,6 +118,8 @@ const ImagePreview = ({
           cols: 30
         });
       };
+      canvas.style.width = "auto";
+      canvas.style.height = "300px";
       imageObject.src = canvas.toDataURL();
     }
   }, [imageData, onSubmit]);
