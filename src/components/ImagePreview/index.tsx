@@ -105,12 +105,9 @@ const ImagePreview = ({
         ctx.scale(scale, scale);
         ctx.drawImage(imageObject, 0, 0);
         const scaledData = ctx.getImageData(0, 0, 30, 30);
-        canvas.height = 30;
-        canvas.width = 30;
-        ctx.scale(scale, scale);
+        canvas.height = 300;
+        canvas.width = 300;
         ctx.drawImage(imageObject, 0, 0);
-        canvas.style.transform = `scale(${1 / scale})`;
-        canvas.style.transformOrigin = `top left`;
         const scaledCellValues = chunk<number>(scaledData.data, 4).map(i =>
           i[0] === 255 ? ALIVE : DEAD
         );

@@ -59,6 +59,7 @@ const ImageImporter = (props: Props) => {
     "" //"https://cdn.glitch.com/4c9ebeb9-8b9a-4adc-ad0a-238d9ae00bb5%2Fmdn_logo-only_color.svg?1535749917189\n"
   );
   const [err, setErr] = useState<Error>();
+  const [step, setStep] = useState(0);
 
   const [
     allowCrossOriginImageLoading,
@@ -106,6 +107,9 @@ const ImageImporter = (props: Props) => {
     setErr(undefined);
   };
 
+  const isLocalImage = targetUrl.startsWith("/");
+  const needsCORSPermission = !allowCrossOriginImageLoading && !isLocalImage;
+
   return (
     <Root>
       <Overlay onClick={props.onCancel} />
@@ -115,75 +119,85 @@ const ImageImporter = (props: Props) => {
         <p>
           You can generate cells on the board based on the pixels in an image.
         </p>
-        <h3>Select a sample image</h3>
-        <ImageGallery>
-          {[sampleImage2, sampleImage1, sampleImage3].map(src => (
-            <ImageGalleryOption
-              src={src}
-              key={src}
-              onClick={() => handleImageClicked(src)}
+        {step === 0 && (
+          <div>
+            <h3>Select a sample image</h3>
+            <ImageGallery>
+              {[sampleImage2, sampleImage1, sampleImage3].map(src => (
+                <ImageGalleryOption
+                  src={src}
+                  key={src}
+                  onClick={() => handleImageClicked(src)}
+                />
+              ))}
+            </ImageGallery>
+            <h3>Or import from a URL</h3>
+            <URLInput
+              placeholder={"Paste a URL here..."}
+              type="url"
+              value={targetUrl}
+              onChange={handleUrlChange}
             />
-          ))}
-        </ImageGallery>
-        <h3>Or import from a URL</h3>
-        <URLInput
-          placeholder={"Paste a URL here..."}
-          type="url"
-          value={targetUrl}
-          onChange={handleUrlChange}
-        />
-        {targetUrl.startsWith("http") && (
-          <p>
-            <label>
-              <input
-                type={"checkbox"}
-                checked={allowCrossOriginImageLoading}
-                onChange={e =>
-                  setAllowCrossOriginImageLoading(e.target.checked)
-                }
-              />
-              I want to allow loading of cross-origin images (required for this
-              demo)
-            </label>
-          </p>
+            {targetUrl.length > 0 && !isLocalImage && (
+              <div>
+                <p>
+                  <label>
+                    <input
+                      type={"checkbox"}
+                      checked={allowCrossOriginImageLoading}
+                      onChange={e =>
+                        setAllowCrossOriginImageLoading(e.target.checked)
+                      }
+                    />
+                    I want to allow loading of cross-origin images (required for
+                    this demo)
+                  </label>
+                </p>
+                <p>
+                  <small>
+                    There are{" "}
+                    <a
+                      href={
+                        "https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image"
+                      }
+                      target={"blank"}
+                    >
+                      security considerations
+                    </a>{" "}
+                    to be aware of. Additionally, only images served with CORS
+                    headers set to `*` will work here.
+                  </small>
+                </p>
+              </div>
+            )}
+            {err && <p>{err.message}</p>}
+            {!err && targetUrl && !needsCORSPermission && (
+              <SideBySide style={{ height: 200 }}>
+                <BackgroundPreview src={targetUrl} />
+              </SideBySide>
+            )}
+            <hr />
+            {!err && targetUrl && (
+              <Button onClick={() => setStep(1)}>Continue and Analyze</Button>
+            )}
+            <Button onClick={props.onCancel}>Cancel</Button>
+          </div>
         )}
-        <p>
-          <small>
-            There are{" "}
-            <a
-              href={
-                "https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image"
+        {step === 1 && (
+          <div>
+            <ImagePreview
+              src={targetUrl}
+              allowCrossOriginImageLoading={
+                allowCrossOriginImageLoading || targetUrl.startsWith("/")
               }
-              target={"blank"}
-            >
-              security considerations
-            </a>{" "}
-            to be aware of. Additionally, only images served with CORS headers
-            set to `*` will work here.
-          </small>
-        </p>
-        {err && <p>{err.message}</p>}
-        {!err &&
-          targetUrl &&
-          (allowCrossOriginImageLoading || targetUrl.startsWith("/")) && (
-            <SideBySide style={{ height: 200 }}>
-              <BackgroundPreview src={targetUrl} />
-              <ImagePreview
-                src={targetUrl}
-                allowCrossOriginImageLoading={
-                  allowCrossOriginImageLoading || targetUrl.startsWith("/")
-                }
-                onSubmit={setImportedGameState}
-              />
-            </SideBySide>
-          )}
-        {!err && targetUrl && (
-          <Button
-            onClick={() => props.onSubmit(importedGameState)}
-            style={{ position: "relative", zIndex: 9 }}
-          >
-            Import Now
-          </Button>
+              onSubmit={setImportedGameState}
+            />
+            <hr />
+            <Button onClick={() => setStep(0)}>Go back</Button>
+            <Button onClick={() => props.onSubmit(importedGameState)}>
+              Import Now
+            </Button>
+          </div>
         )}
       </Content>
     </Root>
