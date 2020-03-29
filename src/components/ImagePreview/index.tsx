@@ -54,7 +54,7 @@ const ImagePreview = ({
         }
 
         // decide based on this pixel's brightness
-        if ((r + g + b) / 3 >= 128) {
+        if ((r + g + b) / 3 >= 100) {
           return ALIVE;
         } else {
           return DEAD;

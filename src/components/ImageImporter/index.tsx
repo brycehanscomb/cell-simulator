@@ -117,7 +117,7 @@ const ImageImporter = (props: Props) => {
         </p>
         <h3>Select a sample image</h3>
         <ImageGallery>
-          {[sampleImage1, sampleImage2, sampleImage3].map(src => (
+          {[sampleImage2, sampleImage1, sampleImage3].map(src => (
             <ImageGalleryOption
               src={src}
               key={src}
