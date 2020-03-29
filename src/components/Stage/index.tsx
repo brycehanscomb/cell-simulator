@@ -2,8 +2,9 @@ import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";
 
-import { Root, SizeMonitor } from "./styled";
 import { CELL_GAP, CELL_SIDE_LENGTH } from "../../constants";
+
+import { Root, SizeMonitor } from "./styled";
 
 interface Props {
   rows: number;
@@ -25,6 +26,9 @@ const Stage = (props: Props) => {
     if (rootNode.current) {
       const stageSize = rootNode.current.getBoundingClientRect();
 
+      /**
+       * Prettier.js has made the formatting here look a little silly
+       */
       const boardHeight =
         CELL_SIDE_LENGTH * props.rows + CELL_GAP * (props.rows - 1);
       const boardWidth =
@@ -61,6 +65,9 @@ const Stage = (props: Props) => {
     return () => window.removeEventListener("resize", resizeHandler);
   }, [zoomBoardIfNeeded]);
 
+  /**
+   * For the `as any` casting, @see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/28884
+   */
   return (
     <Root ref={rootNode as any}>
       <SizeMonitor ref={sizeMonitor as any} scale={scaleSize}>
