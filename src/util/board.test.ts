@@ -62,7 +62,7 @@ describe("Utils::board", () => {
     });
 
     /**
-     * @todo: other good tests here would include:
+     * Other good tests here would include:
      *
      * - Empty board state
      * - Cropping to zero columns
@@ -146,7 +146,7 @@ describe("Utils::board", () => {
     });
 
     /**
-     * @todo: other could tests to add here could include:
+     * Other could tests to add here could include:
      *
      * - Starting with empty board
      * - What if the board is only 1x1?
