@@ -1,80 +1,84 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
+
+import { GameState } from "../../types";
+import { loadImage } from "../../util/image";
+
+import Button from "../Button";
+import ImagePreview from "../ImagePreview";
+import { SideBySide } from "../Toolbar/styled"; // todo: don't use another component's styled bits
 
 import {
-  Root,
-  Overlay,
-  Content,
-  CloseButton,
-  Title,
   BackgroundPreview,
+  CloseButton,
+  Content,
   ImageGallery,
   ImageGalleryOption,
+  Overlay,
+  Root,
+  Title,
   URLInput
 } from "./styled";
-import { useEffect, useState } from "react";
-import { SideBySide } from "../Toolbar/styled";
-import ImagePreview from "../ImagePreview";
-import Button from "../Button"; // todo: move this somewhere more common
 
 import sampleImage1 from "../../assets/sample-image-1.jpg";
 import sampleImage2 from "../../assets/sample-image-2.jpg";
 import sampleImage3 from "../../assets/sample-image-3.jpg";
-import { GameState } from "../../types";
 
 interface Props {
   onCancel: () => void;
   onSubmit: (newState: GameState) => void;
 }
 
-export const loadImage = (
-  url: string,
-  allowCrossOrigin: boolean = false
-): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-
-    /**
-     * Only allow this if you know the image is safe to access with the user's
-     * current cookies and such.
-     *
-     * This current implementation is not Enterprise-grade, but good enough for
-     * a tech demo.
-     *
-     * @see http://scary.beasts.org/security/CESA-2008-009.html
-     */
-    if (allowCrossOrigin) {
-      img.setAttribute("crossOrigin", "Anonymous");
-    }
-
-    img.onload = resolve;
-    img.onerror = (_, __, ___, ____, error) => {
-      reject(error);
-    };
-    img.src = url;
-  });
-};
-
 const ImageImporter = (props: Props) => {
+  /**
+   * The URL of the image that the user wants to fetch
+   */
   const [targetUrl, setTargetUrl] = useState<string>("");
+
+  /**
+   * Any error encountered during loading or analysis of the image
+   */
   const [err, setErr] = useState<Error>();
+
+  /**
+   * Step 0: Choose which image
+   * Step 1: Analyze and import image
+   */
   const [step, setStep] = useState(0);
 
+  /**
+   * When the `<ImagePreview>` finishes analyzing the importe image,
+   * we store the resulting game state here for submission on the next tick.
+   */
+  const [importedGameState, setImportedGameState] = useState();
+
+  /**
+   * Because CORS for images is something we need to override, we want to be
+   * responsible and add a disclaimer of informed consent so the user needn't
+   * do a cross-origin image request if they're not comfortable with whatever
+   * (small) risk it entails.
+   */
   const [
     allowCrossOriginImageLoading,
     setAllowCrossOriginImageLoading
   ] = useState(false);
 
-  useEffect(() => {
-    if (targetUrl && !err) {
-      loadImage(
-        targetUrl,
-        allowCrossOriginImageLoading || targetUrl.startsWith("/")
-      ).catch(e => {
-        setErr(e || new Error(`Could not load "${targetUrl}"`));
-      });
-    }
-  }, [targetUrl, setErr, err, allowCrossOriginImageLoading]);
+  const isLocalImage = targetUrl.startsWith("/");
+  const needsCORSPermission = !allowCrossOriginImageLoading && !isLocalImage;
+  const canShowPreview = !err && targetUrl && !needsCORSPermission;
 
+  /**
+   * We provide some sample images for the user to click if they don't want to
+   * find a cross-origin-compatible image somewhere on the internet.
+   */
+  const handleImageClicked = (src: string) => {
+    setTargetUrl(src);
+    setErr(undefined);
+  };
+
+  /**
+   * When the user types into the "Enter URL" textfield
+   */
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { target } = e;
     const { value } = target;
@@ -82,7 +86,7 @@ const ImageImporter = (props: Props) => {
     let isValidUrl = false;
 
     try {
-      new URL(value);
+      new URL(value); // this will throw if the URL is not a valid one... handy!
       isValidUrl = true;
     } catch (e) {
       if (e instanceof TypeError) {
@@ -91,22 +95,34 @@ const ImageImporter = (props: Props) => {
         setErr(e);
       }
     } finally {
-      setTargetUrl(value);
+      setTargetUrl(value); // we have to set it regardless of validity, so it actually shows up in the UI
       if (isValidUrl) {
         setErr(undefined);
       }
     }
   };
 
-  const [importedGameState, setImportedGameState] = useState();
-
-  const handleImageClicked = (src: string) => {
-    setTargetUrl(src);
-    setErr(undefined);
-  };
-
-  const isLocalImage = targetUrl.startsWith("/");
-  const needsCORSPermission = !allowCrossOriginImageLoading && !isLocalImage;
+  /**
+   * When we have a valid image URL, we can load it into memory so we can grab
+   * the pixels from it.
+   *
+   * @todo: there might be a bug here where it loads the URL without the last key typed
+   */
+  useEffect(() => {
+    if (targetUrl && !err) {
+      loadImage(
+        targetUrl,
+        allowCrossOriginImageLoading || targetUrl.startsWith("/")
+      ).catch(e => {
+        setErr(
+          e ||
+            new Error(
+              `Could not load "${targetUrl}". The image server must allow CORS, so maybe that is the issue.`
+            )
+        );
+      });
+    }
+  }, [targetUrl, setErr, err, allowCrossOriginImageLoading]);
 
   return (
     <Root>
@@ -169,7 +185,7 @@ const ImageImporter = (props: Props) => {
               </div>
             )}
             {err && <p>{err.message}</p>}
-            {!err && targetUrl && !needsCORSPermission && (
+            {canShowPreview && (
               <SideBySide style={{ height: 200 }}>
                 <BackgroundPreview src={targetUrl} />
               </SideBySide>
@@ -186,7 +202,7 @@ const ImageImporter = (props: Props) => {
             <ImagePreview
               src={targetUrl}
               allowCrossOriginImageLoading={
-                allowCrossOriginImageLoading || targetUrl.startsWith("/")
+                allowCrossOriginImageLoading || isLocalImage
               }
               onSubmit={setImportedGameState}
             />

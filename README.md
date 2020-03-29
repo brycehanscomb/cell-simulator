@@ -40,6 +40,8 @@ Here's some things that should be improved further:
 
 ## Developing
 
+(Before you do anything, make sure you run `yarn start` in the project directory.)
+
 In the project directory, you can run:
 
 ### `yarn start`
