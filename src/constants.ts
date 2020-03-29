@@ -8,3 +8,9 @@
  */
 export const DEAD = 0;
 export const ALIVE = 1;
+
+/**
+ * It's no fun if your board is too small, so let's enforce a 4x4 minimum
+ */
+export const MIN_ROWS = 4;
+export const MIN_COLS = 4;

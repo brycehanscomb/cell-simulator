@@ -1,50 +1,53 @@
 import * as React from "react";
-import { Root, SideBySide, ThreeUp, Splitter, Text } from "./styled";
-import Button from "../Button";
 import { useEffect, useState } from "react";
-import ImageImporter from "../ImageImporter";
+
 import { GameState } from "../../types";
+import { MIN_COLS, MIN_ROWS } from "../../constants";
 
-export const MIN_ROWS = 4;
-export const MIN_COLS = 4;
+import Button from "../Button";
+import ImageImporter from "../ImageImporter";
 
+import { Root, SideBySide, Splitter, Text, ThreeUp } from "./styled";
+import { pluralize } from "../../util/string";
+
+/**
+ * Milliseconds between generations when auto-playing
+ */
 const STEP_TIME = 333;
 
 interface Props {
+  rows: number;
+  cols: number;
   onStep: () => void;
   onChangeBoardSize: (newRows: number, newCols: number) => void;
   onClearBoard: () => void;
   onResetBoard: () => void;
   onRandomiseBoard: () => void;
   onSetGameState: (newState: GameState) => void;
-  rows: number;
-  cols: number;
 }
 
-// todo: move this
-const pluralize = (singular: string, multiple: string, quantity: number) => {
-  if (quantity === 1) {
-    return singular;
-  } else {
-    return multiple;
-  }
-};
-
 const Toolbar = ({ onStep, ...props }: Props) => {
+  const [isImageImporterShowing, setIsImageImporterShowing] = useState(false);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
+
+  const toggleAutoPlay = () => setIsAutoPlaying(!isAutoPlaying);
+
   const handleResizeButtonClick = (which: "row" | "col", delta: -1 | 1) => (
     e: React.MouseEvent
   ) => {
+    /**
+     * Override the user if they try to make the board too small.
+     */
     props.onChangeBoardSize(
       which === "row" ? Math.max(props.rows + delta, MIN_ROWS) : props.rows,
       which === "col" ? Math.max(props.cols + delta, MIN_COLS) : props.cols
     );
   };
 
-  const [isImageImporterShowing, setIsImageImporterShowing] = useState(false);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(false);
-
-  const toggleAutoPlay = () => setIsAutoPlaying(!isAutoPlaying);
-
+  /**
+   * We implement "auto-play" functionality by simply calling the step function
+   * on a timed loop here. This way the App doesn't know anything about it.
+   */
   useEffect(() => {
     let timer: number;
 

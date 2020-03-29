@@ -1,6 +1,5 @@
-import { MIN_COLS, MIN_ROWS } from "../components/Toolbar";
 import { BoardState, CellValue, GameState } from "../types";
-import { ALIVE, DEAD } from "../constants";
+import { ALIVE, DEAD, MIN_COLS, MIN_ROWS } from "../constants";
 
 /**
  * How the values of the board state as serialised in the URL map to their
