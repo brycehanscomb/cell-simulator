@@ -1,8 +1,8 @@
 import * as React from "react";
-import { CellValue } from "../../util/game";
 
 import { Root } from "./styled";
 import { useEffect, useState } from "react";
+import { CellValue } from "../../types";
 
 interface Props {
   value: CellValue;

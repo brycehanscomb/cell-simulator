@@ -1,6 +1,6 @@
-import { ALIVE, BoardState, CellValue, DEAD } from "./game";
 import { MIN_COLS, MIN_ROWS } from "../components/Toolbar";
-import { GameState } from "../components/App";
+import { BoardState, CellValue, GameState } from "../types";
+import { ALIVE, DEAD } from "../constants";
 
 const parseMap = {
   "0": DEAD,

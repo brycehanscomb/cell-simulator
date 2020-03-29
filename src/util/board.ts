@@ -2,7 +2,7 @@
 // on external libs anyway
 import { chunk } from "lodash";
 
-import { BoardState, CellValue } from "./game";
+import { BoardState, CellValue } from "../types";
 
 /**
  * Like cropping off the right- and bottom-edges of an image,

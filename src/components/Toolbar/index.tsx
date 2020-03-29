@@ -3,7 +3,7 @@ import { Root, SideBySide, ThreeUp, Splitter, Text } from "./styled";
 import Button from "../Button";
 import { useEffect, useState } from "react";
 import ImageImporter from "../ImageImporter";
-import { GameState } from "../App";
+import { GameState } from "../../types";
 
 export const MIN_ROWS = 4;
 export const MIN_COLS = 4;

@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { DEAD } from "../../util/game";
 import { colors } from "../Cell/styled";
+import { DEAD } from "../../constants";
 
 const paddingSize = "10px";
 

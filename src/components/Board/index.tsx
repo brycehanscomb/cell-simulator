@@ -1,7 +1,9 @@
 import * as React from "react";
-import { ALIVE, BoardState, DEAD, getCoordsFor } from "../../util/game";
+import { getCoordsFor } from "../../util/game";
 import Cell from "../Cell";
 import { Root } from "./styled";
+import { BoardState } from "../../types";
+import { ALIVE, DEAD } from "../../constants";
 
 interface Props {
   boardState: BoardState;

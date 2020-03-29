@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { ALIVE, CellValue, DEAD } from "../../util/game";
 import { shadeColor } from "../../util/color";
+import { CellValue } from "../../types";
+import { ALIVE, DEAD } from "../../constants";
 
 /**
  * @todo: move this

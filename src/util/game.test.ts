@@ -1,4 +1,5 @@
-import { getNextGeneration, BoardState, getIndexFromCoords } from "./game";
+import { getNextGeneration, getIndexFromCoords } from "./game";
+import { BoardState } from "../types";
 
 export const renderBoard = (cols: number, rows: number) => (
   board: BoardState

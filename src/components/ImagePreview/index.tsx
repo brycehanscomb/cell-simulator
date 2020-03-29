@@ -2,9 +2,9 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { loadImage } from "../ImageImporter";
 import { chunk } from "lodash";
-import { ALIVE, DEAD } from "../../util/game";
-import { GameState } from "../App";
 import { colorsRGBA } from "../Cell/styled";
+import { GameState } from "../../types";
+import { ALIVE, DEAD } from "../../constants";
 
 interface Props {
   src: string;

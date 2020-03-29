@@ -14,12 +14,12 @@ import {
 import { useEffect, useState } from "react";
 import { SideBySide } from "../Toolbar/styled";
 import ImagePreview from "../ImagePreview";
-import { GameState } from "../App";
 import Button from "../Button"; // todo: move this somewhere more common
 
 import sampleImage1 from "../../assets/sample-image-1.jpg";
 import sampleImage2 from "../../assets/sample-image-2.jpg";
 import sampleImage3 from "../../assets/sample-image-3.jpg";
+import { GameState } from "../../types";
 
 interface Props {
   onCancel: () => void;

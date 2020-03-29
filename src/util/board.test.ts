@@ -1,6 +1,6 @@
 import { cropBoard, padBoard } from "./board";
 import { renderBoard } from "./game.test";
-import { ALIVE, DEAD } from "./game";
+import { ALIVE, DEAD } from "../constants";
 
 describe("Utils::board", () => {
   describe("cropBoard", () => {
